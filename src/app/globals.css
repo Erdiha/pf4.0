@@ -2,32 +2,126 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Properties and Base Styles */
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --soft-blue: 71, 149, 212;
+  /* A softer shade of blue */
+  --vibrant-orange: 255, 135, 44;
+  /* A vibrant deep orange */
+  --off-white: 245, 245, 240;
+  /* Warmer off-white */
+  --fresh-green: 65, 189, 122;
+  /* Fresh, softer green */
+  --deep-magenta: 193, 53, 132;
+  /* Sophisticated magenta */
+  --cool-grey: 99, 110, 114;
+  /* Neutral cool grey */
+  --rich-teal: 15, 118, 110;
+  /* Subdued rich teal */
+  --warm-coral: 252, 157, 154;
+  /* Warm coral */
+  --creamy-beige: 240, 235, 223;
+  /* Elegant beige */
+
+  --foreground-rgb: var(--off-white);
+  --background-start-rgb: var(--creamy-beige);
+  --background-end-rgb: var(--off-white);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-end-rgb: var(--cool-grey);
   }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+ 
+  background: 
+      rgba(var(--background-end-rgb), 0.9);
 }
 
+/* Custom Utilities */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+
+  .text-primary {
+    color: rgb(var(--soft-blue));
+  }
+
+  .text-accent {
+    color: rgb(var(--vibrant-orange));
+  }
+
+  .bg-neutral {
+    background-color: rgb(var(--creamy-beige));
+  }
+}
+
+/* Fade-In Animation */
+.greetingMessage {
+  animation: fade-in 1s ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rotateandmove{
+  animation: rotateItem 2s ease-in-out;
+}
+
+@keyframes rotateItem {
+  from{
+    transform: rotate(0%);
+  }
+
+  to{
+    transform: rotate(90%);
+  }
+  
+}
+
+.container {
+  background: lightblue;
+  cursor: url('https://uploads.codesandbox.io/uploads/user/b3e56831-8b98-4fee-b941-0e27f39883ab/Ad1_-cursor.png') 39 39,
+    auto;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  justify-content: center;
+}
+
+.deck {
+  position: absolute;
+  width: 300px;
+  height: 200px;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
+.deck>div {
+  background-color: white;
+  background-size: auto 85%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 45vh;
+  max-width: 150px;
+  height: 85vh;
+  max-height: 285px;
+  will-change: transform;
+  border-radius: 10px;
+  box-shadow: 0 12.5px 100px -10px rgba(50, 50, 73, 0.4), 0 10px 10px -10px rgba(50, 50, 73, 0.3);
 }
