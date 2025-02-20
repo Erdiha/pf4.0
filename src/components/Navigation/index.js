@@ -1,73 +1,92 @@
-import React, { useState } from 'react';
-import { useSprings, animated, to as interpolate } from '@react-spring/web';
-import { useDrag } from 'react-use-gesture';
+'use client';
 
-const Deck = ({ cards }) => {
-  const [gone] = useState(() => new Set()); // Track cards that are flicked out
-  const [props, api] = useSprings(cards.length, (i) => ({
-    ...to(i),
-    from: from(i),
-  }));
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 
-  const bind = useDrag(
-    ({ args: [index], down, movement: [mx], direction: [xDir], velocity }) => {
-      const trigger = velocity > 0.2; // Trigger if flicking fast
-      const dir = xDir < 0 ? -1 : 1; // Determine flick direction
-      if (!down && trigger) gone.add(index); // Add card to "gone" set
+const BurgerMenu = () => {
+  const [step, setStep] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
-      api.start((i) => {
-        if (index !== i) return; // Update only the dragged card
-        const isGone = gone.has(index);
-        const x = isGone ? (200 + window.innerWidth) * dir : down ? mx : 0;
-        const rot = mx / 100 + (isGone ? dir * 10 * velocity : 0);
-        const scale = down ? 1.1 : 1; // Slight scale-up while dragging
-        return {
-          x,
-          rot,
-          scale,
-          delay: undefined,
-          config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 },
-        };
-      });
-
-      if (!down && gone.size === cards.length) {
-        setTimeout(() => {
-          gone.clear(); // Reset the deck
-          api.start((i) => to(i));
-        }, 600);
-      }
-    }
-  );
+  useEffect(() => {
+    setTimeout(() => setStep(1), 1000); // Start shrinking after 1s
+  }, []);
 
   return (
-    <div className="deck">
-      {props.map(({ x, y, rot, scale }, i) => (
-        <animated.div className="deck-card" key={i} style={{ x, y }}>
-          <animated.div
-            {...bind(i)}
-            style={{
-              transform: interpolate([rot, scale], trans),
-              backgroundImage: `url(${cards[i]})`,
-            }}
-          />
-        </animated.div>
-      ))}
-    </div>
+    <motion.div
+      className="fixed top-4 right-0 bg-white/60 h-[60px] shadow-md overflow-hidden flex flex-col items-center justify-center max-w-screen"
+      initial={{ width: '0px', left: 0 }}
+      animate={
+        step === 0
+          ? { width: '100%' } // Expands fully to the right
+          : { width: '60px', left: 'calc(100% - 75px)' } // Shrinks from left
+      }
+      transition={{ duration: 1, ease: 'easeOut' }}
+      whileHover={{
+        width: '20%', // Expand left
+        height: '100vh', // Expand downward
+        top: 0,
+        bottom: 0,
+        borderRadius: '100px 0px 0px 100px',
+        left: '80%', // Ensures right stays fixed
+      }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+    >
+      {!isHovered ? (
+        // 🔹 Burger icon (span) before hover
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{
+            opacity: isHovered ? 0 : 1,
+            transition: { duration: 0.3 },
+          }}
+          className="flex flex-col items-center justify-center"
+        >
+          <motion.span className="w-8 h-2 bg-black/80 mb-[5px]  " />
+          <motion.span className="w-8 h-2 bg-black/80 mb-[5px] " />
+          <motion.span className="w-8 h-2 bg-black/80 " />
+        </motion.div>
+      ) : (
+        // 🔹 Links with animated underline
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            transition: { delay: 0.3, duration: 0.5, staggerChildren: 0.2 },
+          }}
+          className="flex flex-col gap-4 text-center mt-8"
+        >
+          {['Experience', 'Projects', 'Resume'].map((text, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                transition: { duration: 0.4 + index * 0.1 },
+              }}
+              className="relative"
+            >
+              <Link
+                href="#"
+                className="text-black hover:text-gray-700 text-lg font-semibold relative"
+              >
+                {text}
+                <motion.div
+                  className="absolute left-0 bottom-0 h-[2px] bg-black w-full origin-left"
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                />
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
+    </motion.div>
   );
 };
 
-// Helpers for animation
-const to = (i) => ({
-  x: 0,
-  y: i * -4,
-  scale: 1,
-  rot: -10 + Math.random() * 20,
-  delay: i * 100,
-});
-const from = (_i) => ({ x: 0, rot: 0, scale: 1.5, y: -1000 });
-const trans = (r, s) =>
-  `perspective(1500px) rotateX(30deg) rotateY(${
-    r / 10
-  }deg) rotateZ(${r}deg) scale(${s})`;
-
-export default Deck;
+export default BurgerMenu;

@@ -1,120 +1,84 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment } from '@react-three/drei';
-import { a, useSpring } from '@react-spring/three';
-import { useLoader } from '@react-three/fiber';
-import { TextureLoader } from 'three';
+import React, { useRef, useEffect, useState } from 'react';
+import { Canvas, useFrame } from 'react-three-fiber';
+import { Text, OrbitControls } from '@react-three/drei';
 
-export default function Dial({ isHovered, setIsHovered }) {
-  const orbitControlsRef = useRef();
+const Cube = ({ cubeFace, setCubeFace, scrollYProgress }) => {
+  const groupRef = useRef();
+  const lastFaceIndex = useRef(null);
+  const mousePos = useRef([0, 0, 3]);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeout = useRef(null);
 
-  // Define the items with their initial positions
-  const items = [
-    { id: 1, isMain: true, initialPosition: [0, 0, 0] }, // Main sphere
-    { id: 2, initialPosition: [0, 0, 0] }, // Secondary spheres
-    { id: 3, initialPosition: [0, 0, 0] },
-    { id: 4, initialPosition: [0, 0, 0] },
-    { id: 5, initialPosition: [0, 0, 0] },
-  ];
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      if (!isScrolling) {
+        const x = (event.clientX / window.innerWidth) * 2 - 1;
+        const y = -(event.clientY / window.innerHeight) * 2 + 1;
+        mousePos.current = [x, y, 3];
+      }
+    };
 
-  const isMain = items[0].isMain;
+    const handleScroll = () => {
+      setIsScrolling(true);
+      clearTimeout(scrollTimeout.current);
+    };
 
-  const handleHoverStart = () => {
-    setIsHovered(true);
-  };
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll);
 
-  const handleHoverEnd = () => {
-    setIsHovered(false);
-  };
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout.current);
+    };
+  }, [isScrolling]);
 
-  return (
-    <Canvas
-      shadows
-      camera={{
-        position: [0, 0, 7],
-        fov: 10,
-      }}
-      style={{
-        borderRadius: '100%',
-        backgroundColor: 'transparent',
-        position: 'absolute', // Ensure it sits above everything
-        border: 'solid 1px red',
-        width: '45%', // Adjust width\
-        height: '51%', // Adjust height based on width
-        maxWidth: '20rem',
-        padding: '0', // Remove padding
-        margin: '0', // Remove margin
-        boxShadow: '5px 5px 5px white',
-        zIndex: 9999, // Ensures it sits on top of all elements
-      }}
-    >
-      <group>
-        <Sphere
-          initialPosition={items.initialPosition}
-          isHovered={isHovered}
-          setIsHovered={setIsHovered}
-        />
-      </group>
-      <Env />
-      <OrbitControls
-        ref={orbitControlsRef}
-        autoRotate={!isHovered}
-        reset={isHovered}
-        autoRotateSpeed={isHovered ? 0 : 2}
-        enablePan={false}
-        enableZoom={false}
-        minPolarAngle={Math.PI / 2.1}
-        maxPolarAngle={Math.PI / 2.1}
-        onMouseEnter={handleHoverStart} // Capture the rotation when hovered
-        onMouseLeave={handleHoverEnd} // Reset the rotation when hover ends
-      />
-    </Canvas>
-  );
-}
+  useFrame(() => {
+    if (groupRef.current) {
+      if (!isScrolling) {
+        groupRef.current.lookAt(...mousePos.current);
+      } else {
+        groupRef.current.lookAt(0, 0, 3);
+      }
 
-function Sphere({ isMain, initialPosition, isHovered, setIsHovered }) {
-  // Define positions for the secondary spheres (relative to the main sphere)
-  const secondaryPositions = [
-    [0, 0, 0], // Position for the main sphere
-    [0, 0.8, 0], // Position for secondary sphere 1
-    [0.8, 0, 0], // Position for secondary sphere 2
-    [0, -0.8, 0], // Position for secondary sphere 3
-    [-0.8, 0, 0], // Position for secondary sphere 4
-  ];
-  const texture = useLoader(TextureLoader, '/mercury.jpg'); // Ensure this path is correct
+      // ✅ Rotate cube over 400vh (4 sections)
+      groupRef.current.rotation.x = scrollYProgress.get() * Math.PI * 6;
 
-  // Check if texture is loaded
-  console.log(texture);
+      // ✅ Detect face index (each 100vh = one face)
+      const faceIndex = Math.floor(scrollYProgress.get() * 2) % 4;
 
-  // Use useSpring to animate the position of the spheres when hovered
-  const { position } = useSpring({
-    position: initialPosition,
-    config: { tension: 500, friction: 50 },
+      if (lastFaceIndex.current !== faceIndex) {
+        lastFaceIndex.current = faceIndex;
+        setCubeFace(faceIndex); // ✅ Update face state
+        console.log(`Face changed to: ${faceIndex}`);
+      }
+    }
   });
 
-  const roughness = 50;
+  const colors = ['white', 'white', 'white', 'white', 'black', 'white'];
 
   return (
-    <a.mesh
-      position={position} // Use animated position
-      onPointerOver={() => setIsHovered(true)} // Hovering over main sphere triggers hover
-      onPointerOut={() => setIsHovered(false)} // Hover out of main sphere triggers hover off
-      castShadow
-    >
-      <sphereGeometry args={[0.6, 64, 64]} />
-      <meshStandardMaterial
-        metalness={1}
-        roughness={roughness}
-        map={texture} // Apply the loaded texture here
-      />
-    </a.mesh>
+    <group ref={groupRef} position={[0, 0, 0]}>
+      <mesh>
+        <boxGeometry args={[3, 3, 3]} />
+        {colors.map((color, index) => (
+          <meshStandardMaterial
+            key={index}
+            attach={`material-${index}`}
+            color={color}
+          />
+        ))}
+      </mesh>
+      <Text billboard position={[0, 0.2, 1.6]} fontSize={0.3} color="white">
+        Hi, I am Erdi.
+      </Text>
+      <Text billboard position={[-0.1, -0.2, 1.6]} fontSize={0.15} color="gray">
+        A Software Engineer.
+      </Text>
+    </group>
   );
-}
+};
 
-function Env() {
-  const blur = 0.5;
-
-  return <Environment preset="sunset" background={true} blur={blur} />;
-}
+export default Cube;
