@@ -9,29 +9,36 @@ import Projects from './Projects/projects-page';
 import Contact from './Contact/Contact';
 import Modal from '../components/Modals/Info-Modal/info-modal';
 import { motion, useScroll, useTransform } from 'framer-motion';
-
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Sphere, Line, Box } from '@react-three/drei';
+import { a, useSpring } from '@react-spring/three';
+import ParachuteScene from '@/components/shapes/Parachute/parachute';
+import ResumeViewer from '@/components/Resume/resume';
 export default function Home() {
   const [showNav, setShowNav] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const { scrollYProgress, scrollY } = useScroll(); // Keep scrollYProgress for cube rotation
-  const backgroundY = useTransform(scrollY, [0, 500], ['0%', '-10%']); // Parallax effect
+  const { scrollYProgress, scrollY } = useScroll();
+  const triggerAnimation = useTransform(scrollYProgress, [0.9, 1], [0, 1]);
 
   const [cubeFace, setCubeFace] = useState(0);
   const [activeSection, setActiveSection] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [indx, setIndx] = useState({ initial: true, index: null });
+  const [indx, setIndx] = useState({ initial: true, index: -1 });
   const [closeModal, setCloseModal] = useState(false);
+  const animationOpacity = useTransform(scrollYProgress, [0.7, 1], [0, 1]);
+  const animationY = useTransform(scrollYProgress, [0.7, 1], [100, 0]);
+  const cubeScale = useTransform(scrollYProgress, [0, 1], [1, 2]); // Scale
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (closeModal) {
-      setShowModal(false);
-      setIndx({ index: null, initial: false });
-      setCloseModal(!closeModal);
-    } else if (cubeFace !== 1) {
-      setIndx({ index: null, initial: false });
-      setShowModal(false);
+      setIndx({ index: -1, initial: false });
+      setCloseModal(() => !closeModal);
     }
-  }, [closeModal, cubeFace]);
+  }, [closeModal]);
 
   const sectionRefs = useRef([]);
   useEffect(() => {
@@ -41,7 +48,7 @@ export default function Home() {
 
     setCubeFace(0);
     setShowModal(false);
-    setIndx((prev) => ({ ...prev, index: null }));
+    setIndx((prev) => ({ ...prev, index: -1 }));
   }, []);
 
   useEffect(() => {
@@ -64,7 +71,7 @@ export default function Home() {
           );
           if (sectionIndex !== null && sectionIndex !== cubeFace) {
             setCubeFace(sectionIndex);
-            setIndx((indx) => (indx.index = null));
+            setIndx((indx) => (indx.index = -1));
           }
         }
       });
@@ -91,52 +98,58 @@ export default function Home() {
 
     return () => observer.disconnect();
   }, [cubeFace, showModal, indx]);
-
-  console.log('cube face:', cubeFace);
-
+  console.log('scrolllll', scrollYProgress.get(), lastScrollY);
   return (
-    <main className="min-h-screen w-full flex justify-center items-center relative flex-col overflow-hidden bg-transparent">
-      {/* Parallax Background */}/{/* Navbar */}
-      <div className="fixed top-0 z-[99999999] w-full h-20">
+    <main className="min-h-screen  w-full flex justify-center items-center relative flex-col overflow-hidden ">
+      {/* Navbar */}
+      <div className="fixed top-0 z-[99999999] w-full h-20 0">
         <BurgerMenu />
       </div>
-      {/* Cube controlled by scroll progress (Restored) */}
+      {/* Cube controlled by scroll progress */}
+
       <div
         style={{
           zIndex:
-            (showModal && cubeFace === 1) || setCubeFace === 2 ? 0 : 999999,
+            indx.index > 0 ||
+            cubeFace === 1 ||
+            cubeFace === 3 ||
+            scrollYProgress.get() > 2.5
+              ? 9999
+              : 999999,
         }}
-        className="fixed top-1/4 left-1/4  duration-300 ease-in-out transition-all"
+        className="fixed top-0 left-0 duration-300 ease-in-out transition-all"
       >
-        <Scene
-          scrollYProgress={scrollYProgress} // Cube rotation logic restored
-          cubeFace={cubeFace}
-          setCubeFace={setCubeFace}
-          showModal={showModal}
-          indx={indx}
-        />
+        <motion.div>
+          <Scene
+            scrollYProgress={scrollYProgress}
+            cubeFace={cubeFace}
+            setCubeFace={setCubeFace}
+            showModal={showModal}
+            indx={indx}
+            cubeScale={cubeScale}
+          />
+        </motion.div>
       </div>
-      {/* Content Sections */}
+
       <div
-        style={{
-          zIndex: (showModal && cubeFace === 1) || cubeFace === 2 ? 999999 : 0,
-        }}
-        className="min-h-full h-[400vh] w-full flex justify-center items-center z-10 flex-col"
+        // style={{
+        //   zIndex: (showModal && cubeFace === 1) || cubeFace === 2 ? 999999 : 0,
+        // }}
+        className="relative l w-full h-full flex flex-col justify-center items-center"
       >
         <div
-          className="w-full h-full flex justify-center items-center"
+          className=" flex justify-center items-center h-[100vh] w-full"
           ref={(el) => (sectionRefs.current[0] = el)}
         >
           <LandingPage />
         </div>
         <div
-          style={{ zIndex: 99999 }}
-          className="w-full h-full flex justify-center items-center"
+          className="w-full h-screen flex justify-center items-center z-[99999]"
           ref={(el) => (sectionRefs.current[1] = el)}
         >
           <Experience
             cubeFace={cubeFace}
-            scrollYProgress={scrollYProgress} // Ensuring cube rotation still works
+            scrollYProgress={scrollYProgress}
             showModal={showModal}
             indx={indx}
             setIndx={setIndx}
@@ -144,15 +157,13 @@ export default function Home() {
             closeModal={closeModal}
           />
         </div>
-
         <div
-          style={{ zIndex: cubeFace === 2 ? 999999 : 10 }}
-          className="w-full h-full flex justify-center items-center "
+          className="w-full h-screen flex justify-center items-center z-[999999]"
           ref={(el) => (sectionRefs.current[2] = el)}
         >
           <Projects
             cubeFace={cubeFace}
-            scrollYProgress={scrollYProgress} // Keeping the cube rotation intact
+            scrollYProgress={scrollYProgress}
             showModal={showModal}
             indx={indx}
             setIndx={setIndx}
@@ -161,12 +172,20 @@ export default function Home() {
           />
         </div>
         <div
-          className="w-full h-full flex justify-center items-center"
+          style={{
+            zIndex: cubeFace === 3 ? 999999 : 0,
+          }}
+          className="w-full h-screen flex justify-center items-center relative overflow-hidden"
           ref={(el) => (sectionRefs.current[3] = el)}
         >
-          <Contact />
+          {scrollYProgress.get() >= 0.99 && (
+            <div className="w-full h-full max-w-full max-h-full flex justify-center items-center overflow-hidden">
+              <ResumeViewer />
+            </div>
+          )}
         </div>
       </div>
+      {/* Animation triggered at end of scroll */}
     </main>
   );
 }

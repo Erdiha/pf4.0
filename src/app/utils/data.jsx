@@ -34,7 +34,7 @@ export const experienceObject = [
   {
     title: 'React Frontend Engineer',
     company: 'GBCS Group',
-    type: 'Internship',
+    type: 'Hybrid',
     icon: '/internship.png',
     duration: { start: 'July 2023', end: 'January 2024' },
     details: [
@@ -56,7 +56,7 @@ export const experienceObject = [
   },
   {
     title: 'Full Stack Web Developer',
-    company: 'Glazed & Confused Mini Donuts Food Truck',
+    company: 'Glazed & Confused Mini Donuts',
     type: 'Freelance',
     icon: '/freelancer.png',
     duration: { start: 'April 2023', end: 'November 2023' },

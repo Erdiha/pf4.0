@@ -2,10 +2,15 @@ import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useState, useMemo } from 'react';
+import { HiOutlinePauseCircle } from 'react-icons/hi2';
+import { HiOutlinePlayCircle } from 'react-icons/hi2';
+import { LiaExternalLinkSquareAltSolid } from 'react-icons/lia';
+import { PiCodeSimpleLight } from 'react-icons/pi';
 
 const Card = ({ testimonials, autoplay }) => {
   const [active, setActive] = useState(0);
   const [randomRotateY, setRandomRotateY] = useState(0);
+  const [pause, setPause] = useState(false);
 
   const handleNext = () => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -18,18 +23,18 @@ const Card = ({ testimonials, autoplay }) => {
   const isActive = (index) => index === active;
 
   useEffect(() => {
-    if (autoplay) {
-      const interval = setInterval(handleNext, 5000);
+    if (autoplay && !pause) {
+      const interval = setInterval(handleNext, 4000);
       return () => clearInterval(interval);
     }
-  }, [autoplay, active]); // ✅ Added `active` to dependencies
+  }, [autoplay, active, pause]); // ✅ Added `active` to dependencies
 
   // ✅ Fix: Memoize Random Rotation to Prevent SSR/CSR Mismatch
   useEffect(() => {
     setRandomRotateY(Math.floor(Math.random() * 21) - 10);
   }, []);
   return (
-    <div className="max-w-sm md:max-w-4xl mx-auto bg-white/50 antialiased font-sans px-4 md:px-8 lg:px-12 py-20 z-[99999]">
+    <div className="max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-20 z-[99999] mt-10">
       <div className="relative grid grid-cols-1 md:grid-cols-2 gap-20">
         <div>
           <div className="relative h-80 w-full">
@@ -68,7 +73,7 @@ const Card = ({ testimonials, autoplay }) => {
                     width={500}
                     height={500}
                     draggable={false}
-                    className="h-full w-full rounded-3xl object-cover object-center"
+                    className="h-full w-full  object-cover object-center"
                   />
                 </motion.div>
               ))}
@@ -89,7 +94,7 @@ const Card = ({ testimonials, autoplay }) => {
             <p className="text-sm text-gray-500 dark:text-neutral-500">
               {testimonials[active].designation}
             </p>
-            <motion.p className="text-lg text-gray-500 mt-8 dark:text-neutral-300">
+            <motion.p className="text-lg text-gray-100 mt-2 dark:text-neutral-300">
               {testimonials[active].description
                 .split(' ')
                 .map((word, index) => (
@@ -112,19 +117,52 @@ const Card = ({ testimonials, autoplay }) => {
 
           <div className="flex gap-4 pt-12 md:pt-0 flex-col ">
             <div className="flex space-x-5">
-              <button className="w-fit h-fit p-2 bg-black text-white">
-                Source Code
-              </button>
-              <button className="w-fit h-fit p-2 bg-black text-white">
-                Project Link
-              </button>
+              <div className="flex gap-3">
+                {testimonials[active].links[0] && (
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={testimonials[active].links[0]}
+                    className="inline-flex items-center px-4 py-2.5 bg-gray-900 text-gray-100 rounded-md 
+                transition-all hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 
+                focus:ring-gray-500 text-sm font-medium"
+                  >
+                    <PiCodeSimpleLight className="w-4 h-4 mr-2" />
+                    Source Code
+                  </a>
+                )}
+
+                {testimonials[active].links[1] && (
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={testimonials[active].links[1]}
+                    className="inline-flex items-center px-4 py-2.5 bg-gray-900 text-gray-100 rounded-md 
+                transition-all hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 
+                focus:ring-gray-500 text-sm font-medium"
+                  >
+                    <LiaExternalLinkSquareAltSolid className="w-4 h-4 mr-2" />
+                    Live Demo
+                  </a>
+                )}
+              </div>
             </div>
-            <div className="flex-row flex w-full h-full  justify-start space-x-10 pt-4">
+            <div className="flex-row flex w-full h-full  justify-start space-x-5 pt-4 items-center">
               <button
                 onClick={handlePrev}
                 className="h-7 w-7 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center group/button"
               >
                 <IconArrowLeft className="h-5 w-5 text-black dark:text-neutral-400 group-hover/button:rotate-12 transition-transform duration-300" />
+              </button>
+              <button
+                onClick={() => setPause(!pause)}
+                className="bg-white p-1 text-white rounded-full flex self-center"
+              >
+                {pause ? (
+                  <HiOutlinePlayCircle color="black" size={30} />
+                ) : (
+                  <HiOutlinePauseCircle color="black" size={30} />
+                )}
               </button>
               <button
                 onClick={handleNext}

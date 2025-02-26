@@ -14,7 +14,7 @@ const BurgerMenu = () => {
 
   return (
     <motion.div
-      className="fixed top-4 right-0 bg-white/60 h-[60px] shadow-md overflow-hidden flex flex-col items-center justify-center max-w-screen"
+      className="fixed top-4 right-0 bg-red-500 hover:bg-white h-[60px]  overflow-hidden flex flex-col items-center justify-center max-w-screen"
       initial={{ width: '0px', left: 0 }}
       animate={
         step === 0
@@ -43,7 +43,7 @@ const BurgerMenu = () => {
           }}
           className="flex flex-col items-center justify-center"
         >
-          <motion.span className="w-8 h-2 bg-black/80 mb-[5px]  " />
+          <motion.span className="w-8 h-2 bg-white mb-[5px]  " />
           <motion.span className="w-8 h-2 bg-black/80 mb-[5px] " />
           <motion.span className="w-8 h-2 bg-black/80 " />
         </motion.div>

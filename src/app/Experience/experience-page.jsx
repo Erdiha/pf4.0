@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { delay, motion } from 'framer-motion';
 import Modal from '@/components/Modals/Info-Modal/info-modal';
 import { experienceObject } from '../utils/data';
+import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 
 // ✅ Motion Variants
 const containerVariants = {
@@ -56,14 +57,15 @@ const selectedItemVariants = {
 
 // ✅ Extracted Modular Component
 const ItemCard = ({ job, index, indx, setIndx, isInModal }) => {
+  console.log(`Card ${index} - Selected Index: ${indx.index}`);
   return (
     <motion.div
       key={index}
       variants={itemVariants}
-      className="flex w-full justify-start cursor-pointer relative"
+      className="flex w-full justify-start cursor-pointer relative items-center group"
       onClick={() => setIndx({ index: index, initial: false })}
       style={{
-        zIndex: indx.index === index ? 99 : 1, // ✅ Ensure highest zIndex for selected item
+        zIndex: indx.index === index ? 99 : 1,
       }}
     >
       <motion.div
@@ -73,27 +75,28 @@ const ItemCard = ({ job, index, indx, setIndx, isInModal }) => {
         }
         className="bg-white/90 p-2 rounded-lg min-w-fit w-full text-start relative"
       >
-        {/* ✅ Title with underline animation */}
-        <motion.div
-          className="flex items-center gap-4"
-          initial="hidden"
-          whileHover="hover"
-        >
-          {/* <img src={job?.icon} alt={job?.title} className="w-8 h-8" /> */}
-          <motion.p className="text-3xl font-semibold relative w-[20rem]">
+        <motion.div className="flex items-center gap-4">
+          <p className="text-3xl font-semibold relative w-[20rem]">
             {job?.title}
-            <motion.span
-              className="absolute left-0 bottom-0 h-[2px] bg-red-500"
-              variants={underlineVariants}
-            />
-          </motion.p>
+            <span className="absolute left-0 bottom-0 h-[2px] bg-red-500 w-0 transition-all duration-300 group-hover:w-1/2" />
+          </p>
         </motion.div>
-        <p className="text-gray-600">{job?.company}</p>
-        <p className="text-gray-500 text-sm">
+        <p className="text-gray-600 w-full max-w-xs whitespace-normal break-words p-2 pl-0">
+          {job?.company}
+        </p>
+        <p className="text-gray-500 text-sm w-full max-w-xs whitespace-normal break-words p-2 pl-0">
           {job?.duration.start} - {job?.duration.end}
         </p>
         <p className="text-gray-500 text-sm italic">{job?.type}</p>
       </motion.div>
+
+      {index !== indx.index && (
+        <IconArrowRight
+          color="red"
+          fontWeight={900}
+          className="absolute top-1/2 -right-2 h-5 w-5 text-black dark:text-neutral-400 duration-300 transform group-hover:-rotate-45 transition-all ease-in-out border-l-[1px] border-black"
+        />
+      )}
     </motion.div>
   );
 };
@@ -126,13 +129,9 @@ const Experience = ({
       <motion.div className="w-full flex gap-6 max-w-6xl justify-center items-center">
         <div className="w-full flex flex-col justify-evenly h-full">
           {experienceObject.map((job, index) => (
-            <ItemCard
-              key={index}
-              job={job}
-              index={index}
-              indx={indx}
-              setIndx={setIndx}
-            />
+            <div key={index} className="flex flex-col items-center">
+              <ItemCard job={job} index={index} indx={indx} setIndx={setIndx} />
+            </div>
           ))}
         </div>
 

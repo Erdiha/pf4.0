@@ -29,7 +29,7 @@ function InfiniteCarousel({ direction = 'left', speed }) {
         {[...items, ...items, ...items].map((item, index) => (
           <div
             key={index}
-            className="w-[200px] h-[100px] flex flex-col items-center justify-center rounded-md shadow-lg"
+            className="w-[200px] h-[100px] flex flex-col items-center justify-center rounded-md "
           >
             {item.icon} <hr /> {item.name}
           </div>

@@ -1,3 +1,4 @@
+// Scene.js
 'use client';
 
 import React from 'react';
@@ -7,7 +8,14 @@ import Cube from './Box/box-shape'; // ✅ Import Cube component
 import Modal from '../Modals/Info-Modal/info-modal';
 import { workHistory } from '@/app/utils/data';
 
-const Scene = ({ scrollYProgress, cubeFace, setCubeFace, showModal, indx }) => {
+const Scene = ({
+  scrollYProgress,
+  cubeFace,
+  setCubeFace,
+  showModal,
+  indx,
+  cubeScale,
+}) => {
   // ✅ Animate cube visibility when modal is active
   const cubeAnimation = useSpring({
     opacity: showModal ? 0 : 1, // Fade out when modal opens
@@ -20,20 +28,22 @@ const Scene = ({ scrollYProgress, cubeFace, setCubeFace, showModal, indx }) => {
   return (
     <div
       style={{
-        width: '50vw',
-        height: '50vh',
+        width: '100vw',
+        height: '100vh',
         position: 'fixed',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         pointerEvents: showModal ? 'none' : 'auto', // ✅ Prevent interactions when hidden
         transition: 'opacity 0.3s ease-in-out',
+
+        backgroundColor: 'transparent',
       }}
     >
       {/* ✅ Render Cube only when `cubeFace === 1` */}
       <Canvas>
         <ambientLight intensity={0.5} />
-        <pointLight position={[2, 2, 2]} intensity={0.1} />
+        <pointLight position={[2, 2, 2]} intensity={0.5} />
         {/* ✅ Animate Cube's visibility */}
         <a.group
           style={{
@@ -45,6 +55,7 @@ const Scene = ({ scrollYProgress, cubeFace, setCubeFace, showModal, indx }) => {
             scrollYProgress={scrollYProgress}
             cubeFace={cubeFace}
             setCubeFace={setCubeFace}
+            cubeScale={cubeScale}
           />
         </a.group>
       </Canvas>

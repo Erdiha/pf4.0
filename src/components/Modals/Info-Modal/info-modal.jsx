@@ -27,8 +27,9 @@ function Modal({ show, index, data, items, setCloseModal, closeModal }) {
   console.log('show', show);
 
   const handleClose = () => {
-    setCloseModal(() => !closeModal);
+    setCloseModal((prevState) => !prevState);  // This ensures you get the latest state
   };
+  
 
   return (
     <AnimatePresence mode="wait">
