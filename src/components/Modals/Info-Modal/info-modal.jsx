@@ -40,14 +40,18 @@ function Modal({ show, index, data, items, setCloseModal, closeModal }) {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="relative w-[65vw] h-[70vh] flex bg-white flex-col rounded max-w-[70rem] justify-center items-start p-10 space-y-10 border"
+        className="relative w-full lg:w-full h-full flex bg-white
+         flex-col rounded lg:max-w-[70rem] justify-center items-start p-10 
+         "
       >
         {/* ✅ Selected Item Display */}
         <motion.div variants={listItemVariants} className="w-fit h-fit flex">
           {items}
         </motion.div>
         {/* ✅ Animated List with Delayed Slide-in Effect */}
-        <ul className="text-lg font-normal text-black flex flex-col flex-wrap max-w-[60%] space-y-2 pl-5 list-disc">
+        <ul className="lg:text-lg w-full font-normal text-black flex flex-col 
+        flex-wrap 
+        lg:max-w-[80%] space-y-2 pl-5 list-disc">
           {data?.details.map((item, i) => (
             <motion.li
               key={i}
@@ -64,7 +68,8 @@ function Modal({ show, index, data, items, setCloseModal, closeModal }) {
 
         <motion.button
           onClick={handleClose} // Use the updated function
-          className="absolute top-0 right-8 border-transparent rounded border-2 hover:border-black"
+          className="absolute -bottom-5 lg:top-[25px] lg:right-[25px] 
+          hover:border-black h-fit border-[1px] aspect-square flex right-[calc(50%-25px)] mx-auto "
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           whileHover={{

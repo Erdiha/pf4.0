@@ -8,18 +8,20 @@ import Scene from '@/components/shapes/Scenes';
 import Projects from './Projects/projects-page';
 import Contact from './Contact/Contact';
 import Modal from '../components/Modals/Info-Modal/info-modal';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { easeInOut, motion, useScroll, useTransform } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Sphere, Line, Box } from '@react-three/drei';
 import { a, useSpring } from '@react-spring/three';
 import ParachuteScene from '@/components/shapes/Parachute/parachute';
 import ResumeViewer from '@/components/Resume/resume';
+import { useMediaQuery } from 'react-responsive'
+
+
 export default function Home() {
   const [showNav, setShowNav] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const { scrollYProgress, scrollY } = useScroll();
   const triggerAnimation = useTransform(scrollYProgress, [0.9, 1], [0, 1]);
-
   const [cubeFace, setCubeFace] = useState(0);
   const [activeSection, setActiveSection] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -28,6 +30,15 @@ export default function Home() {
   const animationOpacity = useTransform(scrollYProgress, [0.7, 1], [0, 1]);
   const animationY = useTransform(scrollYProgress, [0.7, 1], [100, 0]);
   const cubeScale = useTransform(scrollYProgress, [0, 1], [1, 2]); // Scale
+
+
+  const isDesktopOrLaptop = useMediaQuery({ minWidth: 1224 })
+  const isBigScreen = useMediaQuery({ minWidth: 1824 })
+  const isTabletOrMobile = useMediaQuery({ maxWidth: 1224 })
+  const isPortrait = useMediaQuery({ orientation: 'portrait' })
+  const isRetina = useMediaQuery({ minResolution: '2dppx' })
+  const isMobile = useMediaQuery({maxWidth:757})
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -52,15 +63,25 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setShowNav(!(currentScrollY > lastScrollY && currentScrollY > 99));
       setLastScrollY(currentScrollY);
     };
-
+  
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+  
+  // useEffect(()=>{
+  //   if(indx.index===1){
+
+  //   }
+
+  // },[indx,cubeFace])
+
 
   useEffect(() => {
     const observerCallback = (entries) => {
@@ -85,6 +106,11 @@ export default function Home() {
         prev.index !== -1 ? { index: -1, initial: false } : prev
       );
     }
+    if(cubeFace!==1){
+      setIndx((prev) =>
+        prev.index !== -1 ? { index: -1, initial: false } : prev
+      )
+    }
 
     const observer = new IntersectionObserver(observerCallback, {
       root: null,
@@ -98,44 +124,63 @@ export default function Home() {
 
     return () => observer.disconnect();
   }, [cubeFace, showModal, indx]);
+
+
+
   console.log('scrolllll', scrollYProgress.get(), lastScrollY);
   return (
-    <main className="min-h-screen  w-full flex justify-center items-center relative flex-col overflow-hidden ">
+    <main className="min-h-screen  w-full flex justify-center items-center
+     relative flex-col overflow-hidden ">
       {/* Navbar */}
-      <div className="fixed top-0 z-[99999999] w-full h-20 0">
+      <div className="fixed top-0 
+      z-[99999999] flex  w-full 
+      max-w-[100rem] h-16 
+     ">
         <BurgerMenu />
       </div>
       {/* Cube controlled by scroll progress */}
 
       <div
-        style={{
-          zIndex:
-            indx.index > 0 ||
-            cubeFace === 1 ||
-            cubeFace === 3 ||
-            scrollYProgress.get() > 2.5
-              ? 9999
-              : 999999,
+      style={{
+        zIndex:
+          indx.index > 0 ||
+          cubeFace === 1 ||
+          cubeFace === 3 ||
+          scrollYProgress.get() > 2.5
+            ? 9999
+            : 999999,
+      }}
+      className="fixed top-0 left-0 duration-300 ease-in-out transition-all"
+    >
+          <motion.div
+        initial={{ opacity: 0, y: 300, scale: 1 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{
+          duration: 1.2,
+          ease: easeInOut,
+          opacity: { duration: 0.9 },
+          y: { 
+            type: "tween",
+            ease: "anticipate",
+            duration: 1
+          },
+        
         }}
-        className="fixed top-0 left-0 duration-300 ease-in-out transition-all"
       >
-        <motion.div>
-          <Scene
-            scrollYProgress={scrollYProgress}
-            cubeFace={cubeFace}
-            setCubeFace={setCubeFace}
-            showModal={showModal}
-            indx={indx}
-            cubeScale={cubeScale}
-          />
-        </motion.div>
-      </div>
-
+        <Scene
+          scrollYProgress={scrollYProgress}
+          cubeFace={cubeFace}
+          setCubeFace={setCubeFace}
+          showModal={showModal}
+          indx={indx}
+          cubeScale={cubeScale}
+          isMobile={isMobile}
+        />
+      </motion.div>
+    </div>
       <div
-        // style={{
-        //   zIndex: (showModal && cubeFace === 1) || cubeFace === 2 ? 999999 : 0,
-        // }}
-        className="relative l w-full h-full flex flex-col justify-center items-center"
+       
+        className="relative  w-full  md:w-[90%] mx-auto  max-w-[100rem]   h-full flex flex-col justify-center items-center"
       >
         <div
           className=" flex justify-center items-center h-[100vh] w-full"
@@ -144,7 +189,8 @@ export default function Home() {
           <LandingPage />
         </div>
         <div
-          className="w-full h-screen flex justify-center items-center z-[99999]"
+          className="w-[100vw] h-screen flex justify-center items-center
+           z-[99999]  "
           ref={(el) => (sectionRefs.current[1] = el)}
         >
           <Experience
@@ -155,6 +201,7 @@ export default function Home() {
             setIndx={setIndx}
             setCloseModal={setCloseModal}
             closeModal={closeModal}
+            isMobile={isMobile}
           />
         </div>
         <div

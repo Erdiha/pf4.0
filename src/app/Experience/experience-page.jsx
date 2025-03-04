@@ -56,13 +56,13 @@ const selectedItemVariants = {
 };
 
 // ✅ Extracted Modular Component
-const ItemCard = ({ job, index, indx, setIndx, isInModal }) => {
+const ItemCard = ({ job, index, indx, setIndx, isInModal,isMobile }) => {
   console.log(`Card ${index} - Selected Index: ${indx.index}`);
   return (
     <motion.div
       key={index}
       variants={itemVariants}
-      className="flex w-full justify-start cursor-pointer relative items-center group"
+      className="flex w-fit justify-start cursor-pointer relative items-center group"
       onClick={() => setIndx({ index: index, initial: false })}
       style={{
         zIndex: indx.index === index ? 99 : 1,
@@ -73,10 +73,10 @@ const ItemCard = ({ job, index, indx, setIndx, isInModal }) => {
         animate={
           indx.index === index ? (isInModal ? 'toModal' : 'selected') : 'normal'
         }
-        className="bg-white/90 p-2 rounded-lg min-w-fit w-full text-start relative"
+        className="bg-white p-2  min-w-fit w-full text-start relative"
       >
         <motion.div className="flex items-center gap-4">
-          <p className="text-3xl font-semibold relative w-[20rem]">
+          <p className="md:text-3xl text-xl font-semibold relative w-[20rem]">
             {job?.title}
             <span className="absolute left-0 bottom-0 h-[2px] bg-red-500 w-0 transition-all duration-300 group-hover:w-1/2" />
           </p>
@@ -94,7 +94,8 @@ const ItemCard = ({ job, index, indx, setIndx, isInModal }) => {
         <IconArrowRight
           color="red"
           fontWeight={900}
-          className="absolute top-1/2 -right-2 h-5 w-5 text-black dark:text-neutral-400 duration-300 transform group-hover:-rotate-45 transition-all ease-in-out border-l-[1px] border-black"
+          size='20px'
+          className="absolute top-1/2 -right-0 h-6 w-6s text-black dark:text-neutral-400 duration-300 transform group-hover:-rotate-45 transition-all ease-in-out border-l-[1px] border-black"
         />
       )}
     </motion.div>
@@ -109,6 +110,7 @@ const Experience = ({
   showModal,
   setCloseModal,
   closeModal,
+  isMobile
 }) => {
   const [isActive, setIsActive] = useState(false);
 
@@ -121,24 +123,47 @@ const Experience = ({
 
   return (
     <motion.div
-      className="w-full h-[100vh] flex flex-col bg-transparent justify-center items-center relative"
+      className="w-full h-[100vh] flex bg-transparent justify-center 
+      items-center relative z-[99999]"
       variants={containerVariants}
       initial="hidden"
       animate={isActive ? 'visible' : 'hidden'}
     >
-      <motion.div className="w-full flex gap-6 max-w-6xl justify-center items-center">
-        <div className="w-full flex flex-col justify-evenly h-full">
+      <motion.div className="flex w-full h-full md:max-w-[100rem] mx-auto 
+      justify-center items-center">
+         {(isMobile && indx.index < 0 || !isMobile ) &&<div className="md:w-1/3 w-full flex flex-col justify-center items-center
+          h-[60%] gap-2 ">
+            <p className={`disabled:${!isMobile} text-xl capitalize font-bold text-pretty  self-start px-11`}>experience</p>
           {experienceObject.map((job, index) => (
-            <div key={index} className="flex flex-col items-center">
-              <ItemCard job={job} index={index} indx={indx} setIndx={setIndx} />
+            <div 
+              key={index} 
+              className="flex flex-col items-center "
+              style={{
+                transition: "opacity 0.3s ease, transform 0.3s ease",
+                opacity: (isMobile && showModal) ? 0 : 1,
+                transform: (isMobile && showModal) ? "translateY(-10px)" : "translateY(0px)",
+                pointerEvents: (isMobile && showModal) ? "none" : "auto"
+              }}
+            >
+              <ItemCard 
+                job={job} 
+                index={index} 
+                indx={indx} 
+                setIndx={setIndx} 
+                isMobile={isMobile} 
+              />
             </div>
           ))}
-        </div>
-
+        </div>}
+         
         {/* ✅ Modal only renders when `indx` is set */}
-        <div
-          style={{ opacity: showModal || indx.index >= 0 ? 1 : 0 }}
-          className="flex w-full z-[999] right-0"
+        {(isMobile && indx.index >= 0 || !isMobile ) &&<div
+          style={{ 
+            opacity: showModal || indx.index >= 0 ? 1 : 0,
+            transition: "opacity 0.3s ease"
+          }}
+          className="flex md:w-3/4 w-full z-[999] h-[60%]
+           justify-center items-center"
         >
           <Modal
             key={indx?.index}
@@ -157,7 +182,7 @@ const Experience = ({
               />
             }
           />
-        </div>
+        </div>}
       </motion.div>
     </motion.div>
   );

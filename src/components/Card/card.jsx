@@ -1,16 +1,19 @@
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { HiOutlinePauseCircle } from 'react-icons/hi2';
 import { HiOutlinePlayCircle } from 'react-icons/hi2';
 import { LiaExternalLinkSquareAltSolid } from 'react-icons/lia';
 import { PiCodeSimpleLight } from 'react-icons/pi';
+import React from 'react';
 
 const Card = ({ testimonials, autoplay }) => {
   const [active, setActive] = useState(0);
   const [randomRotateY, setRandomRotateY] = useState(0);
   const [pause, setPause] = useState(false);
+  const [contentHeight, setContentHeight] = useState(0);
+  const descriptionRefs = useRef(new Array(testimonials.length).fill(null).map(() => React.createRef()));
 
   const handleNext = () => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -22,22 +25,68 @@ const Card = ({ testimonials, autoplay }) => {
 
   const isActive = (index) => index === active;
 
+  // Calculate max content height on initial load
+  useEffect(() => {
+    const calculateMaxHeight = () => {
+      // Create temporary hidden elements to measure all testimonial descriptions
+      const tempContainer = document.createElement('div');
+      tempContainer.style.position = 'absolute';
+      tempContainer.style.visibility = 'hidden';
+      tempContainer.style.width = window.innerWidth <= 768 ? '100%' : '50%'; // Match container width
+      document.body.appendChild(tempContainer);
+      
+      // Measure each testimonial description
+      let maxHeight = 0;
+      testimonials.forEach((testimonial, index) => {
+        const tempElement = document.createElement('div');
+        tempElement.className = 'text-lg';
+        tempElement.innerHTML = testimonial.description;
+        tempContainer.appendChild(tempElement);
+        
+        const height = tempElement.offsetHeight + 200; // Add extra space for other elements
+        if (height > maxHeight) {
+          maxHeight = height;
+        }
+        
+        tempContainer.removeChild(tempElement);
+      });
+      
+      document.body.removeChild(tempContainer);
+      return maxHeight;
+    };
+    
+    // Set max content height after component mounts
+    const maxHeight = calculateMaxHeight();
+    setContentHeight(maxHeight);
+    
+    // Recalculate on window resize for responsive behavior
+    const handleResize = () => {
+      setContentHeight(calculateMaxHeight());
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [testimonials]);
+
   useEffect(() => {
     if (autoplay && !pause) {
       const interval = setInterval(handleNext, 4000);
       return () => clearInterval(interval);
     }
-  }, [autoplay, active, pause]); // ✅ Added `active` to dependencies
+  }, [autoplay, active, pause]);
 
-  // ✅ Fix: Memoize Random Rotation to Prevent SSR/CSR Mismatch
+  // Fix: Memoize Random Rotation to Prevent SSR/CSR Mismatch
   useEffect(() => {
     setRandomRotateY(Math.floor(Math.random() * 21) - 10);
   }, []);
+
   return (
-    <div className="max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-20 z-[99999] mt-10">
+    <div className="max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 
+    lg:pl-16 z-[99999] mt-40 w-full">
       <div className="relative grid grid-cols-1 md:grid-cols-2 gap-20">
+        {/* Image section */}
         <div>
-          <div className="relative h-80 w-full">
+          <div className="relative md:h-80 w-full h-32 flex justify-center items-center">
             <AnimatePresence>
               {testimonials.map((testimonial, index) => (
                 <motion.div
@@ -46,7 +95,7 @@ const Card = ({ testimonials, autoplay }) => {
                     opacity: 0,
                     scale: 0.9,
                     z: -100,
-                    rotate: randomRotateY, // ✅ Use Memoized Value
+                    rotate: randomRotateY,
                   }}
                   animate={{
                     opacity: isActive(index) ? 1 : 0.7,
@@ -73,20 +122,29 @@ const Card = ({ testimonials, autoplay }) => {
                     width={500}
                     height={500}
                     draggable={false}
-                    className="h-full w-full  object-cover object-center"
+                    className="h-full w-full object-cover object-center border"
                   />
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
         </div>
-        <div className="flex justify-between flex-col py-4">
+
+        {/* Content section with fixed height */}
+        <div 
+          className="flex justify-between flex-col md:py-4"
+          style={{ 
+            minHeight: contentHeight > 0 ? `${contentHeight}px` : 'auto',
+            height: contentHeight > 0 ? `${contentHeight}px` : 'auto'
+          }}
+        >
           <motion.div
             key={active}
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -20, opacity: 0 }}
             transition={{ duration: 0.2, ease: 'easeInOut' }}
+            className="flex flex-col"
           >
             <h3 className="text-2xl font-bold dark:text-white text-black">
               {testimonials[active].name}
@@ -94,7 +152,7 @@ const Card = ({ testimonials, autoplay }) => {
             <p className="text-sm text-gray-500 dark:text-neutral-500">
               {testimonials[active].designation}
             </p>
-            <motion.p className="text-lg text-gray-100 mt-2 dark:text-neutral-300">
+            <motion.p className="text-lg text-gray-100 md:mt-2 dark:text-neutral-300">
               {testimonials[active].description
                 .split(' ')
                 .map((word, index) => (
@@ -115,15 +173,15 @@ const Card = ({ testimonials, autoplay }) => {
             </motion.p>
           </motion.div>
 
-          <div className="flex gap-4 pt-12 md:pt-0 flex-col ">
-            <div className="flex space-x-5">
+          <div className="flex md:gap-4 pt-5 md:pt-0 flex-col">
+            <div className="flex md:space-x-5">
               <div className="flex gap-3">
                 {testimonials[active].links[0] && (
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
                     href={testimonials[active].links[0]}
-                    className="inline-flex items-center px-4 py-2.5 bg-gray-900 text-gray-100 rounded-md 
+                    className="inline-flex items-center px-2 md:px-4 md:py-2.5 bg-gray-900 text-gray-100 rounded-md 
                 transition-all hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 
                 focus:ring-gray-500 text-sm font-medium"
                   >
@@ -137,7 +195,7 @@ const Card = ({ testimonials, autoplay }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     href={testimonials[active].links[1]}
-                    className="inline-flex items-center px-4 py-2.5 bg-gray-900 text-gray-100 rounded-md 
+                    className="inline-flex items-center px-2 md:px-4 py-2.5 bg-gray-900 text-gray-100 rounded-md 
                 transition-all hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 
                 focus:ring-gray-500 text-sm font-medium"
                   >
@@ -147,7 +205,7 @@ const Card = ({ testimonials, autoplay }) => {
                 )}
               </div>
             </div>
-            <div className="flex-row flex w-full h-full  justify-start space-x-5 pt-4 items-center">
+            <div className="flex-row flex w-full h-fit justify-start space-x-5 pt-4 items-center">
               <button
                 onClick={handlePrev}
                 className="h-7 w-7 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center group/button"

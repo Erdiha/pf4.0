@@ -86,7 +86,7 @@ function Projects({ cubeFace }) {
       <motion.div
         initial={{ opacity: 0, y: '100px' }}
         animate={
-          isVisible ? { opacity: 1, y: '0px' } : { opacity: 0, y: '100px' }
+          isVisible ? { opacity: 1, y: '0px' } : { opacity: 0, y: '-100px' }
         }
         transition={{
           type: 'spring',
@@ -97,7 +97,7 @@ function Projects({ cubeFace }) {
           delay: 0.5,
           ease: 'easeInOut',
         }}
-        className="w-full h-full flex relative overflow-hidden p-20 justify-center items-center"
+        className="w-full h-full flex relative overflow-hidden md:p-20 justify-center items-center"
       >
         <Card testimonials={testimonials} autoplay />
       </motion.div>
