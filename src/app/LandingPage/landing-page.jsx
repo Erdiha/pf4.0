@@ -58,9 +58,9 @@ export default function LandingPage({ cubeFace }) {
         {/* Main Video Background */}
         <video
           autoPlay
-          loop
+          playsInline // Essential for iOS
           muted
-          playsInline
+          loop
           className="absolute top-0 left-0 w-screen h-full object-cover z-0"
         >
           <source src="/vid.mp4" type="video/mp4" />
@@ -68,19 +68,9 @@ export default function LandingPage({ cubeFace }) {
         </video>
 
         {/* For the triangle videos */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute top-0 left-0 w-full h-full object-cover z-0"
-        >
-          <source src="/water.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
       </motion.span>
 
-      <motion.span
+      {/* <motion.span
         style={{
           clipPath: 'polygon(100% 100%, -0% 100%, 100% -1%)',
           zIndex: 10,
@@ -107,7 +97,7 @@ export default function LandingPage({ cubeFace }) {
           <source src="/water.mp4" autoPlay type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-      </motion.span>
+      </motion.span> */}
 
       {/* Bouncing arrow */}
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center justify-center z-20">
