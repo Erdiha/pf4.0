@@ -170,7 +170,7 @@ const Cube = ({ scrollYProgress, setCubeFace, cubeFace, indx, isMobile }) => {
               fontSize={0.1}
               color="white"
             >
-              A Software Engineer.
+              A software engineer.
             </Text>
           </>
         )
