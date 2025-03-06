@@ -4,9 +4,6 @@ import React from 'react'
 import { a, useSpring } from '@react-spring/three'
 import { Canvas } from '@react-three/fiber'
 import Cube from './Box/box-shape' // Import Cube component
-import Modal from '../Modals/Info-Modal/info-modal'
-import { workHistory } from '@/app/utils/data'
-import { isMac } from '@react-pdf-viewer/core'
 import * as THREE from 'three'
 
 const Scene = ({

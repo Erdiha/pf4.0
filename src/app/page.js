@@ -4,12 +4,12 @@ import React, { useEffect, useState, useRef } from 'react'
 import LandingPage from '@/app/LandingPage/landing-page'
 import BurgerMenu from '@/components/Navigation'
 import Experience from './Experience/experience-page'
-import Scene from '@/components/shapes/Scenes'
+import Scene from '../components/shapes/Scenes'
 import Projects from './Projects/projects-page'
 import ResumeViewer from '@/components/Resume/resume'
 import { easeInOut, motion, useScroll, useTransform } from 'framer-motion'
 import { useMediaQuery } from 'react-responsive'
-import NavCube from '@/components/shapes/navCube'
+import NavCube from '../components/shapes/navCube'
 
 export default function Home() {
   // ==================== STATE MANAGEMENT ====================

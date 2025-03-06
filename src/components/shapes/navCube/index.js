@@ -2,8 +2,7 @@
 
 import React, { useRef, useState, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Text } from '@react-three/drei'
-import { delay } from 'framer-motion'
+import { Text } from '@react-three/drei'
 
 // Cube object with visible materials and text on each face
 const CubeObject = ({ scrollYProgress }) => {
