@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { delay, motion } from 'framer-motion'
-import Modal from '@/components/Modals/Info-Modal/info-modal'
+import Modal from '../../components/Modals/Info-Modal/info-modal'
 import { experienceObject } from '../utils/data'
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 

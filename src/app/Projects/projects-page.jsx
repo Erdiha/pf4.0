@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import InfiniteCarousel from '@/components/Carousel/carousel'
-import Card from '@/components/Card/card'
+import Card from '../../components/Card/card'
+import InfiniteCarousel from '../../components/Carousel/carousel'
 
 function Projects({
   cubeFace,
