@@ -24,7 +24,7 @@ const listItemVariants = {
 };
 
 function Modal({ show, index, data, items, setCloseModal, closeModal }) {
-  console.log('show', show);
+  // console.log('show', show);
 
   const handleClose = () => {
     setCloseModal((prevState) => !prevState);  // This ensures you get the latest state

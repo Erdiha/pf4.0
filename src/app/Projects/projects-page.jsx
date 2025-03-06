@@ -1,14 +1,26 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import InfiniteCarousel from '@/components/Carousel/carousel';
-import Card from '@/components/Card/card';
+'use client'
 
-function Projects({ cubeFace }) {
-  const [isVisible, setIsVisible] = useState(false);
+import React, { useState, useEffect, useMemo } from 'react'
+import { motion } from 'framer-motion'
+import InfiniteCarousel from '@/components/Carousel/carousel'
+import Card from '@/components/Card/card'
 
+function Projects({
+  cubeFace,
+  isMobile,
+  scrollYProgress,
+  showModal,
+  ...otherProps
+}) {
+  // Use hasMounted pattern to avoid hydration mismatch
+  const [hasMounted, setHasMounted] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+
+  // Only set state after component has mounted on client
   useEffect(() => {
-    setIsVisible(cubeFace === 2);
-  }, [cubeFace]);
+    setHasMounted(true)
+    setIsVisible(cubeFace === 2)
+  }, [cubeFace])
 
   const projectLinks = [
     'https://gand-c.vercel.app/home',
@@ -18,7 +30,7 @@ function Projects({ cubeFace }) {
     'https://myflix-eight.vercel.app/',
     'https://main--effortless-kangaroo-bb5cd4.netlify.app/',
     'https://main.d2en2iuoalsx7.amplifyapp.com/',
-  ];
+  ]
   const projectsCode = [
     'https://github.com/Erdiha/GlazedANDConfused',
     'https://github.com/Erdiha/LetterBee',
@@ -27,7 +39,7 @@ function Projects({ cubeFace }) {
     'https://github.com/Erdiha/myFLIX',
     'https://github.com/Erdiha/Camper',
     'https://github.com/Erdiha/Quiz-Game',
-  ];
+  ]
   const testimonials = useMemo(
     () =>
       [
@@ -77,11 +89,20 @@ function Projects({ cubeFace }) {
         ...item,
         links: [projectsCode[index], projectLinks[index]],
       })),
-    []
-  );
+    [],
+  )
+
+  // Return a simple placeholder during server rendering and first client render
+  if (!hasMounted) {
+    return (
+      <div className="w-[100%] h-[100%] flex isolate ring-10 ring-black/5 border-black flex-col relative">
+        {/* Static placeholder during SSR */}
+      </div>
+    )
+  }
 
   return (
-    <div className="w-[100%] h-[100%] flex  isolate  ring-10 ring-black/5 border-black flex-col relative">
+    <div className="w-[100%] h-[100%] flex isolate ring-10 ring-black/5 border-black flex-col relative">
       {/* Animated Card Section */}
       <motion.div
         initial={{ opacity: 0, y: '100px' }}
@@ -93,21 +114,26 @@ function Projects({ cubeFace }) {
           stiffness: 80, // Softer movement
           damping: 20, // More controlled stop
           mass: 1, // More weight for natural feel
-          duration: 2.0, // Slower transition
-          delay: 0.5,
+          duration: 1.0, // Slower transition
+          delay: 0.1,
           ease: 'easeInOut',
         }}
-        className="w-full h-full flex relative overflow-hidden md:p-20 justify-center items-center"
+        className="w-full h-full flex-col flex relative overflow-hidden md:p-20 justify-center items-center"
       >
+        {isMobile && (
+          <p className="text-black text-2xl w-full pl-7 pb-7 font-bold ">
+            Projects
+          </p>
+        )}
         <Card testimonials={testimonials} autoplay />
       </motion.div>
 
       {/* Carousel at the Bottom */}
-      <div className="carousel w-full absolute h-fit bottom-0  justify-center flex items-center">
+      <div className="carousel w-full absolute h-fit bottom-0 justify-center flex items-center">
         <InfiniteCarousel direction={'left'} speed={35} />
       </div>
     </div>
-  );
+  )
 }
 
-export default Projects;
+export default Projects

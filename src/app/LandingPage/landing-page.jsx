@@ -1,40 +1,39 @@
-'use client';
+'use client'
 
-import { MdKeyboardArrowDown } from 'react-icons/md';
-import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { MdKeyboardArrowDown } from 'react-icons/md'
+import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 
 export default function LandingPage({ cubeFace }) {
-  const [colors, setColors] = useState([]);
+  const [colors, setColors] = useState([])
 
   // Generate random colors
   useEffect(() => {
     setColors(
-      Array.from({ length: 2 }, () => `hsl(${Math.random() * 360}, 100%, 50%)`)
-    );
-  }, []);
+      Array.from({ length: 2 }, () => `hsl(${Math.random() * 360}, 100%, 50%)`),
+    )
+  }, [])
 
   return (
     <div className="w-screen min-w-[100vw]  h-screen flex items-center justify-center  relative overflow-hidden">
       {/* Background Video */}
       <div className="relative w-full h-screen">
-  {/* Video Background */}
-  <video
-    autoPlay
-    loop
-    muted
-    className="absolute top-0 left-0 w-screen h-full object-cover z-0"
-  >
-    <source src="/vid.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
+        {/* Video Background */}
+        <video
+          autoPlay
+          loop
+          muted
+          className="absolute top-0 left-0 w-screen h-full object-cover z-0"
+        >
+          <source src="/vid.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
 
-  {/* Gradient Overlay */}
-  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black z-10"></div>
+        {/* Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black z-10"></div>
 
-  {/* Content Goes Here */}
- 
-</div>
+        {/* Content Goes Here */}
+      </div>
 
       {/* Animated color
       {/* Animated colored triangles */}
@@ -56,13 +55,27 @@ export default function LandingPage({ cubeFace }) {
           ease: 'easeInOut',
         }}
       >
+        {/* Main Video Background */}
         <video
           autoPlay
           loop
           muted
+          playsInline
+          className="absolute top-0 left-0 w-screen h-full object-cover z-0"
+        >
+          <source src="/vid.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+
+        {/* For the triangle videos */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
           className="absolute top-0 left-0 w-full h-full object-cover z-0"
         >
-          <source src="/water.mp4" autoPlay type="video/mp4" />
+          <source src="/water.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </motion.span>
@@ -106,5 +119,5 @@ export default function LandingPage({ cubeFace }) {
         />
       </div>
     </div>
-  );
+  )
 }

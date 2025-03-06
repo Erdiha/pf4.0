@@ -22,6 +22,7 @@
     "framer-motion": "^12.4.3",
     "leva": "^0.9.35",
     "next": "^15.1.7",
+    "next-intl": "^3.26.5",
     "pdfjs-dist": "^4.10.38",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

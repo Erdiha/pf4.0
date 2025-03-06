@@ -90,14 +90,9 @@
   }
 }
 
-
-
-@layer base {
-  
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+body {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  /* Ensure vertical scrolling is allowed */
 }
+

@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import { delay, motion } from 'framer-motion';
-import Modal from '@/components/Modals/Info-Modal/info-modal';
-import { experienceObject } from '../utils/data';
-import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
+import React, { useEffect, useState } from 'react'
+import { delay, motion } from 'framer-motion'
+import Modal from '@/components/Modals/Info-Modal/info-modal'
+import { experienceObject } from '../utils/data'
+import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 
 // ✅ Motion Variants
 const containerVariants = {
@@ -13,7 +13,7 @@ const containerVariants = {
     opacity: 1,
     transition: { staggerChildren: 0.4, delayChildren: 0, ease: 'easeInOut' },
   },
-};
+}
 
 const itemVariants = {
   hidden: { opacity: 0, x: '-100%', scale: 0.8 },
@@ -24,13 +24,13 @@ const itemVariants = {
     scale: 1,
     transition: { staggerChildren: 0.4, delayChildren: 0, ease: 'easeInOut' },
   },
-};
+}
 
 // ✅ Underline animation from left to right
 const underlineVariants = {
   hidden: { width: '0%' },
   hover: { width: '50%', transition: { duration: 0.4, ease: 'easeInOut' } },
-};
+}
 
 // ✅ Selection animation (Move item to modal)
 const selectedItemVariants = {
@@ -53,11 +53,11 @@ const selectedItemVariants = {
     opacity: 1,
     scale: 1,
   },
-};
+}
 
 // ✅ Extracted Modular Component
-const ItemCard = ({ job, index, indx, setIndx, isInModal,isMobile }) => {
-  console.log(`Card ${index} - Selected Index: ${indx.index}`);
+const ItemCard = ({ job, index, indx, setIndx, isInModal, isMobile }) => {
+  // console.log(`Card ${index} - Selected Index: ${indx.index}`);
   return (
     <motion.div
       key={index}
@@ -94,13 +94,13 @@ const ItemCard = ({ job, index, indx, setIndx, isInModal,isMobile }) => {
         <IconArrowRight
           color="red"
           fontWeight={900}
-          size='20px'
+          size="20px"
           className="absolute top-1/2 -right-0 h-6 w-6s text-black dark:text-neutral-400 duration-300 transform group-hover:-rotate-45 transition-all ease-in-out border-l-[1px] border-black"
         />
       )}
     </motion.div>
-  );
-};
+  )
+}
 
 // ✅ Main Experience Component
 const Experience = ({
@@ -110,16 +110,21 @@ const Experience = ({
   showModal,
   setCloseModal,
   closeModal,
-  isMobile
+  isMobile,
 }) => {
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
 
+  useEffect(() => {
+    setIsMounted(true) // Set this to true after the first render (client-side).
+  }, [])
   // ✅ Trigger animation only when `cubeFace === 1`
   useEffect(() => {
-    setIsActive(cubeFace === 1);
-  }, [cubeFace]);
+    setIsActive(cubeFace === 1)
+  }, [cubeFace])
 
-  console.log('Selected Index:', indx);
+  // console.log('Selected Index:', indx);
+  if (!isMounted) return null // Prevent hydration mismatch during the initial render.
 
   return (
     <motion.div
@@ -129,63 +134,80 @@ const Experience = ({
       initial="hidden"
       animate={isActive ? 'visible' : 'hidden'}
     >
-      <motion.div className="flex w-full h-full md:max-w-[100rem] mx-auto 
-      justify-center items-center">
-         {(isMobile && indx.index < 0 || !isMobile ) &&<div className="md:w-1/3 w-full flex flex-col justify-center items-center
-          h-[60%] gap-2 ">
-            <p className={`disabled:${!isMobile} text-xl capitalize font-bold text-pretty  self-start px-11`}>experience</p>
-          {experienceObject.map((job, index) => (
-            <div 
-              key={index} 
-              className="flex flex-col items-center "
-              style={{
-                transition: "opacity 0.3s ease, transform 0.3s ease",
-                opacity: (isMobile && showModal) ? 0 : 1,
-                transform: (isMobile && showModal) ? "translateY(-10px)" : "translateY(0px)",
-                pointerEvents: (isMobile && showModal) ? "none" : "auto"
-              }}
-            >
-              <ItemCard 
-                job={job} 
-                index={index} 
-                indx={indx} 
-                setIndx={setIndx} 
-                isMobile={isMobile} 
-              />
-            </div>
-          ))}
-        </div>}
-         
+      <motion.div
+        className="flex w-full h-full md:max-w-[100rem] mx-auto 
+      justify-center items-center"
+      >
+        {((isMobile && indx.index < 0) || !isMobile) && (
+          <div
+            className="md:w-1/3 w-full flex flex-col justify-center items-center
+          h-[60%] gap-2 "
+          >
+            {isMobile && (
+              <p
+                className={` text-2xl  capitalize font-bold text-pretty  self-start px-11`}
+              >
+                experience
+              </p>
+            )}
+            {experienceObject.map((job, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center "
+                style={{
+                  transition: 'opacity 0.3s ease, transform 0.3s ease',
+                  opacity: isMobile && showModal ? 0 : 1,
+                  transform:
+                    isMobile && showModal
+                      ? 'translateY(-10px)'
+                      : 'translateY(0px)',
+                  pointerEvents: isMobile && showModal ? 'none' : 'auto',
+                }}
+              >
+                <ItemCard
+                  job={job}
+                  index={index}
+                  indx={indx}
+                  setIndx={setIndx}
+                  isMobile={isMobile}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* ✅ Modal only renders when `indx` is set */}
-        {(isMobile && indx.index >= 0 || !isMobile ) &&<div
-          style={{ 
-            opacity: showModal || indx.index >= 0 ? 1 : 0,
-            transition: "opacity 0.3s ease"
-          }}
-          className="flex md:w-3/4 w-full z-[999] h-[60%]
+        {((isMobile && indx.index >= 0) || !isMobile) && (
+          <div
+            style={{
+              opacity: showModal || indx.index >= 0 ? 1 : 0,
+              transition: 'opacity 0.3s ease',
+            }}
+            className="flex md:w-3/4 w-full z-[999] h-[60%]
            justify-center items-center"
-        >
-          <Modal
-            key={indx?.index}
-            setCloseModal={setCloseModal}
-            closeModal={closeModal}
-            show={showModal}
-            data={experienceObject[indx?.index]}
-            index={indx?.index}
-            items={
-              <ItemCard
-                job={experienceObject[indx?.index]}
-                index={indx?.index}
-                indx={indx}
-                setIndx={setIndx}
-                isInModal
-              />
-            }
-          />
-        </div>}
+          >
+            <Modal
+              key={indx?.index}
+              setCloseModal={setCloseModal}
+              closeModal={closeModal}
+              show={showModal}
+              data={experienceObject[indx?.index]}
+              index={indx?.index}
+              items={
+                <ItemCard
+                  job={experienceObject[indx?.index]}
+                  index={indx?.index}
+                  indx={indx}
+                  setIndx={setIndx}
+                  isInModal
+                />
+              }
+            />
+          </div>
+        )}
       </motion.div>
     </motion.div>
-  );
-};
+  )
+}
 
-export default Experience;
+export default Experience
