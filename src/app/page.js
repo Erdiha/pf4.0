@@ -62,6 +62,12 @@ export default function Home() {
   const isPortrait = hasMounted ? isPortraitQuery : false
   const isRetina = hasMounted ? isRetinaQuery : false
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0)
+    }
+  }, [])
+
   // Update scroll progress state safely for use in JSX
   useEffect(() => {
     if (!hasMounted) return
