@@ -420,7 +420,6 @@ export default function Home() {
           setCubeFace={setCubeFace}
           setIsAutoScroll={setIsAutoScroll}
           isMobile={isMobile}
-          scrollToSection={scrollToSection}
         />
       </div>
 
