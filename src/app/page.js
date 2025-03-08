@@ -63,9 +63,30 @@ export default function Home() {
   const isRetina = hasMounted ? isRetinaQuery : false
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.scrollTo(0, 0)
-    }
+    // Mark component as mounted
+    setHasMounted(true)
+
+    // Use a small delay to ensure DOM is fully ready before scrolling
+    const timer = setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        // Force scroll to top with both methods for maximum compatibility
+        window.scrollTo(0, 0)
+
+        // For iOS Safari and some mobile browsers that might ignore the first method
+        document.documentElement.scrollTop = 0
+        document.body.scrollTop = 0
+
+        // Reset auto-scroll flag to prevent other effects from scrolling
+        setIsAutoScroll(false)
+      }
+    }, 100)
+
+    // Reset initial states
+    setCubeFace(0)
+    setShowModal(false)
+    setIndx((prev) => ({ ...prev, index: -1 }))
+
+    return () => clearTimeout(timer)
   }, [])
 
   // Update scroll progress state safely for use in JSX
