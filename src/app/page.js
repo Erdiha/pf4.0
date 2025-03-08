@@ -138,8 +138,7 @@ export default function Home() {
     }
   }, [hasMounted])
 
-  // ==================== SCROLL HANDLING ====================
-  // Mobile scroll detection
+  // ==================== IMPROVED SCROLL HANDLING ====================
   useEffect(() => {
     if (!hasMounted || !isMobile) return
 
@@ -249,7 +248,7 @@ export default function Home() {
         window.removeEventListener('scroll', handleScroll)
       }
     } else {
-      // Desktop approach using IntersectionObserver (unchanged)
+      // Desktop approach using IntersectionObserver with improved thresholds
       const observerCallback = (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -267,6 +266,7 @@ export default function Home() {
         })
       }
 
+      // More forgiving thresholds for smoother transitions
       const options = {
         root: null,
         rootMargin: '-40% 0% -40% 0%',
@@ -283,7 +283,7 @@ export default function Home() {
     }
   }, [cubeFace, hasMounted, isMobile])
 
-  // Update the auto-scroll function to handle the offset as well
+  // Update the auto-scroll function with improved behavior
   useEffect(() => {
     if (!isAutoScroll || !hasMounted) return
 
@@ -375,7 +375,7 @@ export default function Home() {
     <main
       ref={mainRef}
       className="min-h-screen w-full flex justify-center items-center
-      relative flex-col overflow-x-hidden"
+      relative flex-col overflow-x-hidden smooth-scroll"
       style={{
         // Use CSS variable for reliable viewport height
         minHeight:
@@ -398,6 +398,9 @@ export default function Home() {
             align-items: center;
             justify-content: center;
           }
+          .smooth-scroll {
+            scroll-behavior: smooth;
+          }
         `}</style>
       )}
 
@@ -417,6 +420,7 @@ export default function Home() {
           setCubeFace={setCubeFace}
           setIsAutoScroll={setIsAutoScroll}
           isMobile={isMobile}
+          scrollToSection={scrollToSection}
         />
       </div>
 

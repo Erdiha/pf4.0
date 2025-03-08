@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { a, useSpring } from '@react-spring/three'
-import { Canvas } from '@react-three/fiber'
-import Cube from './Box/box-shape' // Import Cube component
-import * as THREE from 'three'
+import React from 'react';
+import { a, useSpring } from '@react-spring/three';
+import { Canvas } from '@react-three/fiber';
+import Cube from './Box/box-shape'; // Import Cube component
+import * as THREE from 'three';
 
 const Scene = ({
   scrollYProgress,
@@ -20,7 +20,7 @@ const Scene = ({
     opacity: showModal ? 0 : 1, // Fade out when modal opens
     scale: showModal ? 0.5 : 1, // Shrink when modal opens
     config: { tension: 200, friction: 20 },
-  })
+  });
 
   return (
     <div
@@ -64,7 +64,7 @@ const Scene = ({
         </a.group>
       </Canvas>
     </div>
-  )
-}
+  );
+};
 
-export default Scene
+export default Scene;
