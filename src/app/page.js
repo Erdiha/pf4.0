@@ -375,7 +375,7 @@ export default function Home() {
     <main
       ref={mainRef}
       className="min-h-screen w-full flex justify-center items-center
-      relative flex-col overflow-x-hidden smooth-scroll"
+      relative flex-col overflow-x-hidden smooth-scroll bg-white"
       style={{
         // Use CSS variable for reliable viewport height
         minHeight:
@@ -455,7 +455,7 @@ export default function Home() {
       </div>
 
       {/* Main Content Sections */}
-      <div className="relative w-full md:w-[90%] mx-auto max-w-[100rem] h-full flex flex-col justify-center items-center">
+      <div className="abolute w-full md:w-[100%] mx-auto h-full flex flex-col justify-center items-center">
         {/* Section 1: Home */}
         <div
           id="home"
