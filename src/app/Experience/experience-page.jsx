@@ -26,12 +26,6 @@ const itemVariants = {
   },
 }
 
-// ✅ Underline animation from left to right
-const underlineVariants = {
-  hidden: { width: '0%' },
-  hover: { width: '50%', transition: { duration: 0.4, ease: 'easeInOut' } },
-}
-
 // ✅ Selection animation (Move item to modal)
 const selectedItemVariants = {
   selected: {
@@ -78,7 +72,9 @@ const ItemCard = ({ job, index, indx, setIndx, isInModal, isMobile }) => {
         <motion.div className="flex items-center gap-4">
           <p className="md:text-3xl text-xl font-semibold relative w-[20rem]">
             {job?.title}
-            <span className="absolute left-0 bottom-0 h-[2px] bg-red-500 w-0 transition-all duration-300 group-hover:w-1/2" />
+            {!isInModal && (
+              <span className="absolute left-0 bottom-0 h-[2px] bg-red-500 w-0 transition-all duration-300 group-hover:w-1/2" />
+            )}{' '}
           </p>
         </motion.div>
         <p className="text-gray-600 w-full max-w-xs whitespace-normal break-words p-2 pl-0">
