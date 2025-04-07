@@ -79,20 +79,35 @@ const ResumeText = () => {
           </span>
           <ul className="list-disc ml-6 mt-2">
             <li>
-              Designed and developed user-friendly AI-driven web applications
-              using Next.js and TypeScript.
+              Designed and developed the company’s main web presence using React
+              and Next.js, implementing all UI/UX logic, page transitions, and
+              animations.
             </li>
             <li>
-              Integrated advanced Large Language Models (LLMs) into applications
-              to enhance functionality and user experience.
+              Built the official website for the mobile app, incorporating
+              scroll-based animations and responsive components for a smooth
+              user experience.
             </li>
             <li>
-              Utilized cloud services such as Supabase for backend support and
-              data management.
+              Developed voice recording features with integrated animations and
+              began exploring AI-driven enhancements for voice transcription and
+              interaction.
             </li>
             <li>
               Implemented AI technologies like background removal APIs (e.g.,
               remove.bg) to add advanced features to web applications.
+            </li>
+            <li>
+              Contributed cross-platform solutions using Flutter and Dart,
+              collaborating across mobile and web teams.
+            </li>
+            <li>
+              Actively participated in AI integration research and prototyping
+              for frontend use cases.
+            </li>
+            <li>
+              Worked collaboratively with designers and engineers to ship
+              scalable, performant applications.
             </li>
           </ul>
         </div>

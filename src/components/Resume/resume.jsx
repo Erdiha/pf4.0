@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { AiOutlineDownload } from 'react-icons/ai'
 import { motion } from 'framer-motion'
 import ResumeText from './ResumeText'
+import SkillsCubes from '../skills/SkillsCubes'
 
 const Resume = () => {
   const [isMobile, setIsMobile] = useState(false)
@@ -21,6 +22,8 @@ const Resume = () => {
     // Cleanup
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
+  const monthName = new Date().toLocaleString('default', { month: 'long' }) // e.g., "April"
+  const fileName = `ErdiHaciogullari_Resume_${monthName}.pdf`
 
   return (
     <motion.div
@@ -55,11 +58,7 @@ const Resume = () => {
           </div>
         ) : (
           // For desktop: Keep the iframe as it is
-          <iframe
-            src="/resume.pdf"
-            className="w-full h-full object-contain flex"
-            title="Resume"
-          />
+          <SkillsCubes />
         )}
       </motion.div>
 
@@ -69,7 +68,7 @@ const Resume = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
         href="/resume.pdf"
-        download="YourName_Resume.pdf"
+        download={fileName}
         className={`inline-flex items-center px-4 py-2.5 bg-gray-900 text-gray-100 rounded-md 
                 transition-all hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 
                 focus:ring-gray-500 text-sm font-medium ${

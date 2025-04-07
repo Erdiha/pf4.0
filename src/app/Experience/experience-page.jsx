@@ -125,7 +125,7 @@ const Experience = ({
   return (
     <motion.div
       className="w-full h-[100vh] flex bg-transparent justify-center 
-      items-center relative z-[99999]"
+      items-center relative z-[9999999999]"
       variants={containerVariants}
       initial="hidden"
       animate={isActive ? 'visible' : 'hidden'}
@@ -179,7 +179,7 @@ const Experience = ({
               opacity: showModal || indx.index >= 0 ? 1 : 0,
               transition: 'opacity 0.3s ease',
             }}
-            className="flex md:w-3/4 w-full z-[999] h-[60%]
+            className="flex relative md:w-3/4 w-full z-[99999999] h-[60%]
            justify-center items-center"
           >
             <Modal

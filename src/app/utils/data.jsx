@@ -17,7 +17,7 @@ export const workHistory = [
     duration: '2019 - 2020',
     details: 'Details about Startup X',
   },
-];
+]
 
 export const experienceObject = [
   {
@@ -54,8 +54,8 @@ export const experienceObject = [
     icon: '/freelancer.png',
     duration: { start: 'October 2023', end: 'July 2024' },
     details: [
-      'Used Python and Pandas libraries to clean, handle incomplete or empty data, and analyze the data.',
-      'Utilizing Pandas functionalities like DataFrame manipulation, merging, and time-series analysis to deliver tailored software solutions.',
+      'Employed DataFrame manipulation, merging, and time-series analysis for tailored software solutions',
+      'Utilized Python and Pandas for data cleaning, handling incomplete data, and analysis',
     ],
   },
   {
@@ -69,4 +69,4 @@ export const experienceObject = [
       'Managed both front-end and back-end development tasks.',
     ],
   },
-];
+]
