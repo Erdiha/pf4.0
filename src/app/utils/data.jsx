@@ -17,7 +17,7 @@ export const workHistory = [
     duration: '2019 - 2020',
     details: 'Details about Startup X',
   },
-];
+]
 
 export const experienceObject = [
   {
@@ -27,8 +27,12 @@ export const experienceObject = [
     icon: '/freelancer.png',
     duration: { start: 'May 2024', end: 'Present' },
     details: [
-      'Working with JavaScript/Typescript, Dart, and modern frameworks/libraries like React.js and Flutter to create dynamic and responsive web interfaces.',
-      'Utilized backend technologies such as Node.js, Express.js, and PostgreSQL (Supabase) for server-side development, including RESTful API design and implementation, to deliver tailored software solutions.',
+      'Developed the company’s main web presence using React and Next.js, implementing all UI/UX logic, page transitions, and animations.',
+      'Built the official website for the mobile app, incorporating scroll-based animations and responsive components for a smooth user experience.',
+      'Developed voice recording features with integrated animations and began exploring AI-driven enhancements for voice transcription and interaction.',
+      'Contributed cross-platform solutions using Flutter and Dart, collaborating across mobile and web teams.',
+      'Actively participated in AI integration research and prototyping for frontend use cases.',
+      'Worked collaboratively with designers and engineers to ship scalable, performant applications.',
     ],
   },
   {
@@ -50,8 +54,8 @@ export const experienceObject = [
     icon: '/freelancer.png',
     duration: { start: 'October 2023', end: 'July 2024' },
     details: [
-      'Used Python and Pandas libraries to clean, handle incomplete or empty data, and analyze the data.',
-      'Utilizing Pandas functionalities like DataFrame manipulation, merging, and time-series analysis to deliver tailored software solutions.',
+      'Employed DataFrame manipulation, merging, and time-series analysis for tailored software solutions',
+      'Utilized Python and Pandas for data cleaning, handling incomplete data, and analysis',
     ],
   },
   {
@@ -65,4 +69,4 @@ export const experienceObject = [
       'Managed both front-end and back-end development tasks.',
     ],
   },
-];
+]

@@ -16,12 +16,12 @@ import {
   SiBootstrap,
   SiPython,
   SiCplusplus,
-} from 'react-icons/si';
-import { RiReactjsFill } from 'react-icons/ri';
+} from 'react-icons/si'
+import { RiReactjsFill } from 'react-icons/ri'
 
 export const techIcons = [
   { icon: <RiReactjsFill className="text-blue-500 text-4xl" />, name: 'React' },
-  { icon: <SiNextdotjs className="text-black text-4xl" />, name: 'Next.js' },
+  { icon: <SiNextdotjs className="text-white text-4xl" />, name: 'Next.js' },
   {
     icon: <SiTypescript className="text-blue-600 text-4xl" />,
     name: 'TypeScript',
@@ -52,4 +52,4 @@ export const techIcons = [
   { icon: <SiPython className="text-blue-400 text-4xl" />, name: 'Python' },
   { icon: <SiCplusplus className="text-blue-400 text-4xl" />, name: 'C++' },
   { icon: <SiDart className="text-blue-400 text-4xl" />, name: 'Dart' },
-];
+]

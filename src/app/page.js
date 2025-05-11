@@ -471,7 +471,7 @@ export default function Home() {
 
         {/* Section 2: Experience */}
         <div
-          id="experince"
+          id="experience"
           className={
             hasMounted && isMobile
               ? 'section-container w-[100vw] z-[99999]'
@@ -515,7 +515,7 @@ export default function Home() {
 
         {/* Section 4: Resume */}
         <div
-          id="resume"
+          id="resume/skills"
           ref={(el) => {
             sectionRefs.current[3] = el
             resumeRef.current = el

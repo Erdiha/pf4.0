@@ -26,7 +26,7 @@ const BurgerMenu = ({ cubeFace, setCubeFace, isMobile }) => {
     setIsOpen(false)
 
     // Map of section IDs
-    const sectionIds = ['home', 'experince', 'project', 'resume']
+    const sectionIds = ['home', 'experience', 'project', 'resume/skills']
     const targetId = sectionIds[index]
 
     // Use direct ID targeting
@@ -302,7 +302,7 @@ const BurgerMenu = ({ cubeFace, setCubeFace, isMobile }) => {
                   onClick={() => navigateToSection(3)}
                   className="text-black hover:text-gray-700 text-lg font-semibold relative cursor-pointer"
                 >
-                  Resume
+                  Resume/Skills
                   <motion.div
                     className="absolute left-0 bottom-0 h-[2px] bg-black w-full origin-left"
                     initial={{ scaleX: 0 }}
