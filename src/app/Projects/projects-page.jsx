@@ -23,6 +23,7 @@ function Projects({
   }, [cubeFace])
 
   const projectLinks = [
+    'https://www.whiskerswhistle.com/',
     'https://gand-c.vercel.app/home',
     'https://www.youtube.com/watch?v=U_5BrEn1fzg',
     'https://lift-budz.vercel.app/',
@@ -32,6 +33,7 @@ function Projects({
     'https://main.d2en2iuoalsx7.amplifyapp.com/',
   ]
   const projectsCode = [
+    '',
     'https://github.com/Erdiha/GlazedANDConfused',
     'https://github.com/Erdiha/LetterBee',
     'https://github.com/Erdiha/LiftBudz',
@@ -43,6 +45,12 @@ function Projects({
   const testimonials = useMemo(
     () =>
       [
+        {
+          description:
+            'An animal advocacy platform enabling users to report abuse cases, helping protect animals through community-driven action and awareness.',
+          name: 'Whiskers Whistle',
+          src: '/whiskers.png',
+        },
         {
           description:
             'A testament to my freelance skills, a professional website project showcasing my full-stack development expertise in my portfolio.',
